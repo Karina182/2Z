@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Где нужны программисты и сколько зарабатывают</title>
+    <style>
+        :root {
+            --bg-color: #060913;
+            --nav-bg: rgba(6, 9, 19, 0.92);
+            --card-bg: rgba(16, 26, 51, 0.65);
+            --border-color: rgba(59, 130, 246, 0.25);
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.22);
+            --badge-bg: rgba(59, 130, 246, 0.18);
+            --text-main: #ffffff; /* Чисто-белый текст */
+            --text-muted: #e2e8f0; /* Светло-белый / серебристый для второстепенного текста */
+        }
+
+        body.light-theme {
+            --bg-color: #f8fafc;
+            --nav-bg: rgba(255, 255, 255, 0.92);
+            --card-bg: #ffffff;
+            --border-color: rgba(37, 99, 235, 0.2);
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.1);
+            --badge-bg: rgba(37, 99, 235, 0.12);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.65;
+            background-image: radial-gradient(circle at 85% 20%, var(--accent-glow), transparent 45%);
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: clip;
+        }
+
+        /* Верхняя планка специальности */
+        .specialty-title {
+            width: 100%;
+            padding: 16px 15px;
+            text-align: center;
+            font-size: clamp(14px, 2.2vw, 20px);
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--text-main);
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+        }
+
+        /* Навигация с поддержкой мобильного меню */
+        nav.site-nav {
+            width: 100%;
+            min-height: 68px;
+            padding: 12px clamp(14px, 3vw, 32px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 8px 28px rgba(0,0,0,.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .site-nav .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            width: min(100%, 1240px);
+        }
+
+        .site-nav .nav-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 9px 14px;
+            border-radius: 13px;
+            font-size: .92rem;
+            line-height: 1.3;
+            text-align: center;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .site-nav .nav-links a:hover { border-color: var(--accent); color: var(--accent); }
+        .site-nav .nav-links a.active { background: var(--accent); color: #ffffff; box-shadow: 0 5px 16px var(--accent-glow); }
+
+        .theme-btn {
+            background: var(--card-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 9px 14px;
+            border-radius: 13px; cursor: pointer; font-weight: 500;
+            transition: 0.3s; margin-left: 4px; min-height: 42px; font-size: 0.9rem;
+        }
+        .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Кнопка гамбургер для мобильных */
+        .menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            width: 46px;
+            height: 44px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 13px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            cursor: pointer;
+        }
+        .menu-toggle span {
+            width: 20px;
+            height: 2px;
+            border-radius: 3px;
+            background: currentColor;
+            transition: transform .22s ease, opacity .18s ease;
+        }
+        .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(7px) rotate(45deg); }
+        .menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-7px) rotate(-45deg); }
+
+        .container { max-width: 1140px; margin: 0 auto; padding: 45px 20px; width: min(100% - 40px, 1140px); }
+
+        .page-header { text-align: center; margin-bottom: 30px; }
+        .page-header h1 { font-size: clamp(2rem, 5vw, 2.6rem); margin-bottom: 12px; letter-spacing: -0.5px; color: var(--text-main); }
+        .page-header h1 span { color: var(--accent); }
+        .subtitle { color: var(--text-muted); font-size: 1.12rem; max-width: 750px; margin: 0 auto; }
+
+        /* Баннер */
+        .banner-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto 50px auto;
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: var(--card-bg);
+        }
+        .banner-container img {
+            width: 100%;
+            height: auto;
+            max-height: 380px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            font-size: 1.85rem; margin-bottom: 24px;
+            display: flex; align-items: center; gap: 12px;
+            color: var(--text-main);
+        }
+        .section-heading::before {
+            content: ""; display: inline-block; width: 6px; height: 28px;
+            background: var(--accent); border-radius: 4px;
+        }
+
+        /* Сетка отраслей */
+        .sectors { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 24px; margin-bottom: 55px; 
+        }
+        .sector-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 28px; border-radius: 20px; backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .sector-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 14px 30px var(--accent-glow);
+        }
+        .sector-card h3 { color: var(--accent); margin-bottom: 10px; font-size: 1.3rem; }
+        .sector-card p { color: var(--text-muted); font-size: 0.98rem; }
+
+        /* Таблица зарплат */
+        .salary-section {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 24px; padding: 38px; backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 55px;
+        }
+        .salary-section h2 { margin-bottom: 10px; font-size: 1.85rem; color: var(--text-main); }
+        .salary-note { color: var(--text-muted); margin-bottom: 25px; font-size: 0.98rem; }
+        
+        .salary-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 0; border-bottom: 1px solid var(--border-color); 
+            flex-wrap: wrap; gap: 15px;
+        }
+        .salary-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .salary-info strong { font-size: 1.15rem; display: block; margin-bottom: 4px; color: var(--text-main); }
+        .salary-info p { color: var(--text-muted); font-size: 0.95rem; max-width: 680px; }
+        
+        .badge {
+            background: var(--badge-bg); color: var(--accent);
+            border: 1px solid var(--border-color);
+            padding: 8px 18px; border-radius: 14px; font-weight: 700;
+            font-size: 1.05rem; white-space: nowrap;
+        }
+
+        /* Форматы работы */
+        .perks-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .perk-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 18px; padding: 24px; backdrop-filter: blur(10px);
+        }
+        .perk-card h4 { color: var(--accent); margin-bottom: 8px; font-size: 1.15rem; }
+        .perk-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        footer { text-align: center; padding: 35px; color: var(--text-muted); font-size: 0.95rem; }
+
+        /* Адаптивность для планшетов и телефонов */
+        @media (max-width: 900px) {
+            .container { width: min(100% - 32px, 760px); padding: 34px 0; }
+            .sectors { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 700px) {
+            nav.site-nav { min-height: 62px; justify-content: flex-end; padding: 9px 16px; }
+            .menu-toggle { display: flex; }
+            .site-nav .nav-links {
+                display: none;
+                position: absolute;
+                top: calc(100% + 1px);
+                left: 0;
+                right: 0;
+                width: 100%;
+                max-height: calc(100dvh - 70px);
+                overflow-y: auto;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 7px;
+                padding: 13px 16px 18px;
+                background: var(--nav-bg);
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: 0 16px 30px rgba(0,0,0,.2);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+            }
+            .site-nav .nav-links.is-open { display: flex; }
+            .site-nav .nav-links a, .site-nav .nav-links .theme-btn {
+                display: flex;
+                width: 100%;
+                min-height: 48px;
+                justify-content: flex-start;
+                margin: 0;
+                padding: 12px 15px;
+                border-radius: 12px;
+                font-size: .96rem;
+                text-align: left;
+            }
+            .site-nav .nav-links .theme-btn { justify-content: center; margin-top: 4px; }
+            body.menu-open { overflow: hidden; }
+
+            .container { width: min(100% - 24px, 100%); padding: 25px 12px; }
+            h1 { font-size: 1.75rem !important; }
+            .section-heading, .salary-section h2 { font-size: 1.45rem !important; }
+            .salary-section { padding: 20px 16px; }
+            .salary-row { flex-direction: column; align-items: flex-start; }
+            .badge { align-self: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="specialty-title">
+        09.02.07 Информационные системы и программирование
+    </div>
+
+
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Где нужны <span>программисты</span> и сколько платят?</h1>
+            <p class="subtitle">Сегодня IT-специалисты востребованы абсолютно в каждой отрасли экономики — от крупных промышленных предприятий до медицины и развлечений</p>
+        </div>
+
+        <div class="banner-container">
+            <img src="Рисунок1.png" alt="Рабочее место разработчика с ноутбуком">
+        </div>
+
+        <h2 class="section-heading">Ключевые сферы применения</h2>
+        <div class="sectors">
+            <div class="sector-card">
+                <h3>Нефтегаз и промышленность</h3>
+                <p>Автоматизация добычи и переработки, геодезические расчёты, мониторинг датчиков в реальном времени, системы телеметрии и цифровые двойники предприятий.</p>
+            </div>
+            <div class="sector-card">
+                <h3>Медицина и биотехнологии</h3>
+                <p>Медицинские информационные системы (МИС), электронные карты пациентов, онлайн-запись к врачам и диагностика снимков с помощью искусственного интеллекта.</p>
+            </div>
+            <div class="sector-card">
+                <h3>Финтех и банковский сектор</h3>
+                <p>Мобильные банки, системы быстрых платежей, защита финансовых транзакций, алгоритмическая торговля и антифрод-системы против мошенников.</p>
+            </div>
+            <div class="sector-card">
+                <h3>Образование и EdTech</h3>
+                <p>Интерактивные образовательные платформы, электронные дневники, тренажёры для изучения языков, системы тестирования и дистанционного обучения.</p>
+            </div>
+            <div class="sector-card">
+                <h3>E-commerce и логистика</h3>
+                <p>Маркетплейсы, сервисы доставки, автоматизация складов, построение оптимальных маршрутов транспорта и системы учёта товаров.</p>
+            </div>
+            <div class="sector-card">
+                <h3>Госсектор и кибербезопасность</h3>
+                <p>Порталы государственных услуг, защита критической информационной инфраструктуры, шифрование данных и обеспечение цифровой безопасности граждан.</p>
+            </div>
+        </div>
+
+        <div class="salary-section">
+            <h2>Карьерные уровни и уровень дохода в России</h2>
+            <p class="salary-note">Зарплата напрямую зависит от грейда (уровня опыта), стека технологий и сложности решаемых бизнес-задач:</p>
+            
+            <div class="salary-row">
+                <div class="salary-info">
+                    <strong>Intern (Стажёр)</strong>
+                    <p>Студенты старших курсов и выпускники без коммерческого опыта. Работа под руководством наставника, исправление небольших ошибок и изучение командной разработки.</p>
+                </div>
+                <span class="badge">35 000 – 65 000 ₽</span>
+            </div>
+
+            <div class="salary-row">
+                <div class="salary-info">
+                    <strong>Junior (Начинающий специалист)</strong>
+                    <p>Опыт от 6 месяцев до 1.5 лет. Уверенное знание базового языка (Python, C#, JS), умение работать с базами данных, Git и самостоятельно закрывать типовые задачи.</p>
+                </div>
+                <span class="badge">75 000 – 130 000 ₽</span>
+            </div>
+
+            <div class="salary-row">
+                <div class="salary-info">
+                    <strong>Middle (Уверенный разработчик)</strong>
+                    <p>Опыт от 1.5 до 4 лет. Самостоятельное проектирование модулей, оптимизация запросов к БД, участие в выборе архитектуры и понимание бизнес-логики продукта.</p>
+                </div>
+                <span class="badge">160 000 – 260 000 ₽</span>
+            </div>
+
+            <div class="salary-row">
+                <div class="salary-info">
+                    <strong>Senior / Team Lead (Ведущий разработчик)</strong>
+                    <p>Опыт от 4+ лет. Проектирование высоконагруженных систем, ответственность за техническую стратегию, код-ревью и управление командой разработчиков.</p>
+                </div>
+                <span class="badge">290 000 – 480 000+ ₽</span>
+            </div>
+        </div>
+
+        <h2 class="section-heading">Форматы работы и преимущества профессии</h2>
+        <div class="perks-grid">
+            <div class="perk-card">
+                <h4>Гибкий график и удалёнка</h4>
+                <p>Возможность работать из любой точки мира, в гибридном формате или в современном IT-офисе с гибким началом рабочего дня.</p>
+            </div>
+            <div class="perk-card">
+                <h4>Фриланс и пет-проекты</h4>
+                <p>Помимо основной работы в компании, программист может брать заказы на создание сайтов, ботов или запускать собственные стартапы.</p>
+            </div>
+            <div class="perk-card">
+                <h4>Постоянный рост и льготы</h4>
+                <p>Прозрачная система грейдов (пересмотр зарплаты каждые полгода-год), ДМС, оплата курсов и государственная поддержка IT-специалистов.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>Проект о специальности «Программист» • Страница 2 из 4</footer>
+
+    <script>
+    (() => {
+        const nav = document.querySelector('.site-nav');
+        if (!nav) return;
+
+        const menuButton = nav.querySelector('.menu-toggle');
+        const menu = nav.querySelector('.nav-links');
+        const themeButton = nav.querySelector('.theme-btn');
+        const mobileQuery = window.matchMedia('(max-width: 700px)');
+
+        const setMenu = (open) => {
+            if (!menuButton || !menu) return;
+            menu.classList.toggle('is-open', open);
+            menuButton.setAttribute('aria-expanded', String(open));
+            menuButton.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+            document.body.classList.toggle('menu-open', open && mobileQuery.matches);
+        };
+
+        if (menuButton && menu) {
+            menuButton.addEventListener('click', () => {
+                setMenu(menuButton.getAttribute('aria-expanded') !== 'true');
+            });
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => setMenu(false));
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    setMenu(false);
+                    menuButton.focus();
+                }
+            });
+            document.addEventListener('click', event => {
+                if (mobileQuery.matches && !nav.contains(event.target)) setMenu(false);
+            });
+            const resetForViewport = () => setMenu(false);
+            if (mobileQuery.addEventListener) mobileQuery.addEventListener('change', resetForViewport);
+            else mobileQuery.addListener(resetForViewport);
+        }
+
+        if (themeButton) {
+            let savedTheme = 'dark';
+            try { savedTheme = localStorage.getItem('theme') || 'dark'; } catch (error) {}
+            const applyTheme = (light) => {
+                document.body.classList.toggle('light-theme', light);
+                themeButton.textContent = light ? '🌙 Тёмная тема' : '☀️ Светлая тема';
+                themeButton.setAttribute('aria-pressed', String(light));
+            };
+            applyTheme(savedTheme === 'light');
+            themeButton.addEventListener('click', () => {
+                const light = !document.body.classList.contains('light-theme');
+                applyTheme(light);
+                try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (error) {}
+            });
+        }
+    })();
+    </script>
+</body>
+</html>
